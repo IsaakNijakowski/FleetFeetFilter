@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+
 import java.util.ArrayList;
 import java.io.IOException;
 
@@ -9,9 +10,16 @@ import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import javax.swing.*;
 
 class Filter {
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new GUI();
+            }
+        });
         File file = new File("./SKUs.txt");
         File output = new File("./Output.txt");
         PrintWriter write = new PrintWriter(output);
@@ -27,7 +35,10 @@ class Filter {
                     write.append(SKU+"\n");
                 }
             } catch(HttpStatusException e) {
-                System.out.println("Error on SKU "+SKU);
+                System.err.println("Error on SKU "+SKU);
+                scanner.close();
+                write.close();
+                break;
             }
             Thread.sleep(100);
         }
