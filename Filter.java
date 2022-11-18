@@ -14,17 +14,29 @@ import javax.swing.*;
 
 class Filter {
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new GUI();
-            }
-        });
         File file = new File("./SKUs.txt");
+
+        Scanner maxCount = new Scanner(file);
+        int max = 0;
+        while(maxCount.hasNextLine()) {
+            max++;
+            maxCount.nextLine();
+        }
+        JFrame frame = new JFrame("Fleet Feet Filter");
+        JPanel panel = new JPanel();
+        JProgressBar load = new JProgressBar(0, max);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setSize(200, 80);
+        panel.add(load);
+        frame.add(panel);
+        frame.setVisible(true);
+
         File output = new File("./Output.txt");
         PrintWriter write = new PrintWriter(output);
         Scanner scanner = new Scanner(file);
         write.write("");// Clear output contents
+        int count = 0;
         while(scanner.hasNextLine()) {
             ArrayList<Element> elements = new ArrayList<>();
             String SKU = scanner.nextLine();
@@ -35,11 +47,14 @@ class Filter {
                     write.append(SKU+"\n");
                 }
             } catch(HttpStatusException e) {
-                System.err.println("Error on SKU "+SKU);
+                System.err.println("Error on SKU "+SKU+" at line "+count+"\nAre you processing too many requests?");
                 scanner.close();
                 write.close();
                 break;
             }
+            count++;
+            load.setValue(count);
+            frame.revalidate();
             Thread.sleep(100);
         }
         scanner.close();
