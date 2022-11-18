@@ -1,4 +1,4 @@
-import java.awt.Color;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -61,9 +61,9 @@ class Filter {
                 }
             }
             count++;
+            load.setForeground(new ColorUIResource(104, 131, 186));
             load.setValue(count);
             load.setString(count+"/"+max);
-            frame.revalidate();
         }
         load.setForeground(new ColorUIResource(176, 226, 152));
         scanner.close();
